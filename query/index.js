@@ -20,7 +20,7 @@ app.post('/events', async (req, res) => {
     } else {
         posts[req.body.data.post].comments.push({
             id: req.body.data.id,
-            comment: req.body.data.comment
+            content: req.body.data.content
         })
     }
     res.status(201).send({status: "OK"});
