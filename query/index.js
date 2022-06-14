@@ -28,7 +28,7 @@ app.post('/events', async (req, res) => {
             break;
         }
         case "CommentUpdated": {
-            posts[req.body.data.post].comments.find(comment => comment.id === req.body.data.id).content = req.body.data.content
+            posts[req.body.data.post].comments.find(comment => comment.id === req.body.data.id) = req.body.data
             break;
         }
     }
