@@ -24,14 +24,14 @@ app.post('/posts/:id/comments', async (req, res) => {
     comments.push(comment);
     commentsByPostId[req.params.id] = comments;
 
-    notify(comment, req.params.id);
+    notify(comment, req.params.id, "CommentCreated");
 
     res.status(201).send(comments);
 })
 
-let notify = (comment, post) => {
+let notify = (comment, post, type) => {
     await axios.post("http://localhost:4005/events", {
-        type: "CommentCreated",
+        type,
         data: {
             ...comment,
             post
@@ -45,7 +45,7 @@ app.post('/events', async (req, res) => {
     if (req.body.type === "CommentModerated") {
         const comment = commentsByPostId[req.body.data.post].find(comment => comment.id === req.body.data.id);
         comment.status = req.body.data.status;
-        notify(comment, req.body.data.post)
+        notify(comment, req.body.data.post, "CommentUpdated");
     }
 
     res.status(201).send({status: "OK"});

@@ -14,14 +14,23 @@ app.get('/posts', (req, res) => {
 
 app.post('/events', async (req, res) => {
     console.log(req.body);
-    if (req.body.type === "PostCreated") {
-        posts[req.body.data.id] = req.body.data
-        posts[req.body.data.id].comments = []
-    } else {
-        posts[req.body.data.post].comments.push({
-            id: req.body.data.id,
-            content: req.body.data.content
-        })
+    switch (req.body.type) {
+        case "PostCreated": {
+            posts[req.body.data.id] = req.body.data
+            posts[req.body.data.id].comments = []
+            break;
+        }
+        case "CommentCreated": {
+            posts[req.body.data.post].comments.push({
+                id: req.body.data.id,
+                content: req.body.data.content
+            })
+            break;
+        }
+        case "CommentUpdated": {
+            posts[req.body.data.post].comments.find(comment => comment.id === req.body.data.id).content = req.body.data.content
+            break;
+        }
     }
     res.status(201).send({status: "OK"});
 })
